@@ -1,4 +1,4 @@
-package fsd.lab.ring;
+package fsd.lab.model.ring;
 /**
  * 
  */
@@ -19,78 +19,74 @@ public class RingElement<T> {
 		this.value = value;
 	}
 
+	
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public synchronized int getId() {
 		return id;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public synchronized void setId(int id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the value
 	 */
-	public T getValue() {
+	public synchronized T getValue() {
 		return value;
 	}
 
 	/**
-	 * @param value
-	 *            the value to set
+	 * @param value the value to set
 	 */
-	public void setValue(T value) {
+	public synchronized void setValue(T value) {
 		this.value = value;
 	}
 
 	/**
 	 * @return the left
 	 */
-	public RingElement<T> getLeft() {
+	public synchronized RingElement<T> getLeft() {
 		return left;
 	}
 
 	/**
-	 * @param left
-	 *            the left to set
+	 * @param left the left to set
 	 */
-	public void setLeft(RingElement<T> left) {
+	public synchronized void setLeft(RingElement<T> left) {
 		this.left = left;
 	}
 
 	/**
 	 * @return the right
 	 */
-	public RingElement<T> getRight() {
+	public synchronized RingElement<T> getRight() {
 		return right;
 	}
 
 	/**
-	 * @param right
-	 *            the right to set
+	 * @param right the right to set
 	 */
-	public void setRight(RingElement<T> right) {
+	public synchronized void setRight(RingElement<T> right) {
 		this.right = right;
 	}
 
 	/**
 	 * @return the asleep
 	 */
-	public boolean isAsleep() {
+	public synchronized boolean isAsleep() {
 		return asleep;
 	}
 
 	/**
-	 * @param asleep
-	 *            the asleep to set
+	 * @param asleep the asleep to set
 	 */
-	public void setAsleep(boolean asleep) {
+	public synchronized void setAsleep(boolean asleep) {
 		this.asleep = asleep;
 	}
 
