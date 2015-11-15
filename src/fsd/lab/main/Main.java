@@ -19,6 +19,10 @@ public class Main {
 	/**
 	 * 
 	 */
+	private static final int DEFAULT_TAG = 0;
+	/**
+	 * 
+	 */
 	private static final int MAX_MESSAGE_SIZE = 200;
 	/**
 	 * 
@@ -41,7 +45,6 @@ public class Main {
 		int rank = MPI.COMM_WORLD.Rank();
 		int size = MPI.COMM_WORLD.Size();
 
-		int tag = 0;
 
 		try {
 			RingElement<Long> currentElement = ringTopology.getElement(rank);
@@ -56,10 +59,10 @@ public class Main {
 				HirschbergSinclairMessage message = new HirschbergSinclairMessage(MessageType.PROBE, rank, phase,
 						distance);
 				byte[] messageBytes = message.serialise();
-				MPI.COMM_WORLD.Send(messageBytes, 0, messageBytes.length, MPI.BYTE, leftId, tag);
-				MPI.COMM_WORLD.Send(messageBytes, 0, messageBytes.length, MPI.BYTE, rightId, tag);
+				MPI.COMM_WORLD.Send(messageBytes, 0, messageBytes.length, MPI.BYTE, leftId, DEFAULT_TAG);
+				MPI.COMM_WORLD.Send(messageBytes, 0, messageBytes.length, MPI.BYTE, rightId, DEFAULT_TAG);
 			} else {
-				handleNeighbourMessages(tag, leftId, rightId);
+				handleReceivedMessages(rank, leftId, rightId, ringTopology);
 			}
 		} catch (EmptyRingException e) {
 			e.printStackTrace();
@@ -75,35 +78,65 @@ public class Main {
 	}
 
 	/**
-	 * @param tag
+	 * @param currentProcess
 	 * @param leftId
 	 * @param rightId
+	 * @param ringTopology
 	 */
-	private static void handleNeighbourMessages(int tag, int leftId, int rightId) {
+	private static void handleReceivedMessages(int currentProcess, int leftId, int rightId,
+			RingTopology<?> ringTopology) {
 		byte[] messageBytesFromLeft = new byte[MAX_MESSAGE_SIZE];
-		MPI.COMM_WORLD.Recv(messageBytesFromLeft, 0, MAX_MESSAGE_SIZE, MPI.BYTE, leftId, tag);
+		MPI.COMM_WORLD.Recv(messageBytesFromLeft, 0, MAX_MESSAGE_SIZE, MPI.BYTE, leftId, DEFAULT_TAG);
 		HirschbergSinclairMessage messageFromLeft = HirschbergSinclairMessage.getInstance(messageBytesFromLeft);
 
 		byte[] messageBytesFromRight = new byte[MAX_MESSAGE_SIZE];
-		MPI.COMM_WORLD.Recv(messageBytesFromRight, 0, MAX_MESSAGE_SIZE, MPI.BYTE, rightId, tag);
+		MPI.COMM_WORLD.Recv(messageBytesFromRight, 0, MAX_MESSAGE_SIZE, MPI.BYTE, rightId, DEFAULT_TAG);
 		HirschbergSinclairMessage messageFromRight = HirschbergSinclairMessage.getInstance(messageBytesFromRight);
 
-		handleMessage(messageFromLeft);
-		handleMessage(messageFromRight);
+		handleMessage(currentProcess, messageFromLeft, ringTopology, leftId, rightId);
+		handleMessage(currentProcess, messageFromRight, ringTopology, leftId, rightId);
 	}
 
 	/**
+	 * @param currentProcess
 	 * @param message
+	 * @param ringTopology
+	 * @param rightId 
+	 * @param leftId 
 	 */
-	private static void handleMessage(HirschbergSinclairMessage message) {
+	private static void handleMessage(int currentProcess, HirschbergSinclairMessage message,
+			RingTopology<?> ringTopology, int leftId, int rightId) {
 		MessageType messageType = message.getMessageType();
 		switch (messageType) {
 		case PROBE:
+			handleProbe(currentProcess, message, ringTopology, leftId, rightId);
 			break;
 		case REPLY:
 			break;
 		case LEADER:
 			break;
+		}
+	}
+
+	/**
+	 * @param currentProcess
+	 * @param message
+	 * @param ringTopology
+	 * @param rightId 
+	 * @param leftId 
+	 */
+	private static void handleProbe(int currentProcess, HirschbergSinclairMessage message,
+			RingTopology<?> ringTopology, int leftId, int rightId) {
+		int senderId = message.getSenderId();
+		int distance = message.getDistance();
+		int phase = message.getPhase();
+		int frontier = 1<<phase;
+		if (senderId == currentProcess) {
+			HirschbergSinclairMessage leaderMessage = new HirschbergSinclairMessage(MessageType.LEADER, senderId);
+			byte[] messageBytes = leaderMessage.serialise();
+			MPI.COMM_WORLD.Send(messageBytes, 0, messageBytes.length, MPI.BYTE, leftId, DEFAULT_TAG);
+		} else if(senderId > currentProcess) {
+			
 		}
 	}
 }

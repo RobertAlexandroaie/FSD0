@@ -11,13 +11,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-import fsd.lab.model.message.MPISerialisbale;
+import fsd.lab.model.message.MPISerialisable;
 
 /**
  * @author Robert
  *
  */
-public abstract class AbstractMPISerializable implements MPISerialisbale<AbstractMPISerializable> {
+public abstract class AbstractMPISerializable implements MPISerialisable<AbstractMPISerializable> {
 
 	public abstract AbstractMPISerializable getSelf();
 
