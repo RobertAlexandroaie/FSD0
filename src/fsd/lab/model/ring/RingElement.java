@@ -10,16 +10,14 @@ package fsd.lab.model.ring;
 public class RingElement<T> {
 	private int id;
 	private T value;
-	private RingElement<T> left;
-	private RingElement<T> right;
 	private boolean asleep;
+	private int repliesReceived;
 
 	public RingElement(int id, T value) {
 		this.id = id;
 		this.value = value;
 	}
 
-	
 	/**
 	 * @return the id
 	 */
@@ -28,7 +26,8 @@ public class RingElement<T> {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public synchronized void setId(int id) {
 		this.id = id;
@@ -42,38 +41,11 @@ public class RingElement<T> {
 	}
 
 	/**
-	 * @param value the value to set
+	 * @param value
+	 *            the value to set
 	 */
 	public synchronized void setValue(T value) {
 		this.value = value;
-	}
-
-	/**
-	 * @return the left
-	 */
-	public synchronized RingElement<T> getLeft() {
-		return left;
-	}
-
-	/**
-	 * @param left the left to set
-	 */
-	public synchronized void setLeft(RingElement<T> left) {
-		this.left = left;
-	}
-
-	/**
-	 * @return the right
-	 */
-	public synchronized RingElement<T> getRight() {
-		return right;
-	}
-
-	/**
-	 * @param right the right to set
-	 */
-	public synchronized void setRight(RingElement<T> right) {
-		this.right = right;
 	}
 
 	/**
@@ -84,10 +56,65 @@ public class RingElement<T> {
 	}
 
 	/**
-	 * @param asleep the asleep to set
+	 * @param asleep
+	 *            the asleep to set
 	 */
 	public synchronized void setAsleep(boolean asleep) {
 		this.asleep = asleep;
+	}
+
+	/**
+	 * @return the repliesReceived
+	 */
+	public synchronized int getRepliesReceived() {
+		return repliesReceived;
+	}
+
+	/**
+	 * @param receivedReplies
+	 *            the repliesReceived to set
+	 */
+	public synchronized void setRepliesReceived(int receivedReplies) {
+		this.repliesReceived = receivedReplies;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RingElement<T> other = (RingElement<T>) obj;
+		if (id != other.id)
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
 	}
 
 }

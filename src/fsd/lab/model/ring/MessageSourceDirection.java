@@ -7,6 +7,6 @@ package fsd.lab.model.ring;
  * @author Robert
  *
  */
-public enum RingElementPosition {
-	LEFT, RIGHT, SAME;
+public enum MessageSourceDirection {
+	FROM_LEFT, FROM_RIGHT, SAME;
 }

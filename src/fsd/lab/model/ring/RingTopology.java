@@ -11,6 +11,24 @@ import java.util.concurrent.CopyOnWriteArraySet;
  *
  */
 public class RingTopology<T> extends CopyOnWriteArraySet<RingElement<T>> {
+
+	private int leader = -1;
+
+	/**
+	 * @return the leader
+	 */
+	public synchronized int getLeader() {
+		return leader;
+	}
+
+	/**
+	 * @param leader
+	 *            the leader to set
+	 */
+	public synchronized void setLeader(int leader) {
+		this.leader = leader;
+	}
+
 	/**
 	 * 
 	 */

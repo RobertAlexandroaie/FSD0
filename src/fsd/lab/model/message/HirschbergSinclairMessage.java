@@ -10,7 +10,7 @@ import fsd.lab.model.AbstractMPISerializable;
  *
  */
 public class HirschbergSinclairMessage extends AbstractMPISerializable {
-	private MessageType messageType=MessageType.PROBE;
+	private MessageType messageType = MessageType.PROBE;
 	private int senderId;
 	private int phase;
 	private int distance;
@@ -29,7 +29,7 @@ public class HirschbergSinclairMessage extends AbstractMPISerializable {
 		this.phase = phase;
 		this.distance = distance;
 	}
-	
+
 	/**
 	 * 
 	 * @param messageType
@@ -41,11 +41,21 @@ public class HirschbergSinclairMessage extends AbstractMPISerializable {
 		this.senderId = senderId;
 	}
 
+	/**
+	 * @param messageType
+	 * @param senderId
+	 * @param phase
+	 */
+	public HirschbergSinclairMessage(MessageType messageType, int senderId, int phase) {
+		super();
+		this.messageType = messageType;
+		this.senderId = senderId;
+		this.phase = phase;
+	}
 
+	private HirschbergSinclairMessage() {
+	}
 
-
-	private HirschbergSinclairMessage() {}
-	
 	public static HirschbergSinclairMessage getInstance(byte[] bytes) {
 		return (HirschbergSinclairMessage) new HirschbergSinclairMessage().deserialise(bytes);
 	}

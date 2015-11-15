@@ -8,30 +8,30 @@ package fsd.lab.model.ring;
  *
  */
 public class RingUtils {
-	public static RingElementPosition getRelativePosition(RingTopology<?> ring, RingElement<?> referenceElement,
+	public static MessageSourceDirection getMessageSourceDirection(RingTopology<?> ring, RingElement<?> referenceElement,
 			RingElement<?> neighbour) throws ElementNotInRingException, EmptyRingException {
 		if(!(ring.contains(referenceElement)&&ring.contains(neighbour))) {
 			throw new ElementNotInRingException();
 		}
-		return getRelativePosition(ring.size(), referenceElement.getId(), neighbour.getId());
+		return getMessageSourceDirection(ring.size(), referenceElement.getId(), neighbour.getId());
 	}
 
-	public static RingElementPosition getRelativePosition(RingTopology<?> ring, int referencePosition,
+	public static MessageSourceDirection getMessageSourceDirection(RingTopology<?> ring, int referencePosition,
 			int neighbourPosition) throws EmptyRingException {
-		return getRelativePosition(ring.size(), referencePosition, neighbourPosition);
+		return getMessageSourceDirection(ring.size(), referencePosition, neighbourPosition);
 	}
 
-	public static RingElementPosition getRelativePosition(int ringSize, int referencePosition, int neighbourPosition) throws EmptyRingException {
+	public static MessageSourceDirection getMessageSourceDirection(int ringSize, int referencePosition, int neighbourPosition) throws EmptyRingException {
 		if(ringSize == 0) {
 			throw new EmptyRingException();
 		}
-		RingElementPosition position = RingElementPosition.LEFT;
+		MessageSourceDirection position = MessageSourceDirection.FROM_LEFT;
 		int realReferencePosition = getModuloValue(ringSize, referencePosition);
 		int realNeighbourPosition = getModuloValue(ringSize, neighbourPosition);
-		if (realNeighbourPosition > realReferencePosition) {
-			position = RingElementPosition.RIGHT;
+		if (realNeighbourPosition < realReferencePosition) {
+			position = MessageSourceDirection.FROM_RIGHT;
 		} else if (realNeighbourPosition == realReferencePosition) {
-			position = RingElementPosition.SAME;
+			position = MessageSourceDirection.SAME;
 		}
 		return position;
 	}
